@@ -1,0 +1,119 @@
+<div class="container">
+    <h2>{{title}}</h2>
+    <p>{{message}}</p>
+    
+    <div class="card upload-section">
+        <h3>📊 Upload File Excel</h3>
+        <form action="/upload-excel" method="POST" enctype="multipart/form-data">
+            <div class="file-input-wrapper">
+                <input type="file" name="file" id="excelFile" accept=".xlsx,.xls" required>
+                <label for="excelFile" class="file-label">
+                    <span class="file-icon">📁</span>
+                    <span class="file-text">Chọn file Excel</span>
+                </label>
+            </div>
+            <button type="submit" class="upload-btn">Tải lên và xem dữ liệu</button>
+        </form>
+    </div>
+
+    {{#if excelData}}
+    <div class="card data-section">
+        <h3>📋 Dữ liệu từ file Excel</h3>
+        <p class="file-info">File: <strong>{{fileName}}</strong> | Số dòng: <strong>{{excelData.length}}</strong></p>
+        
+        <div class="table-wrapper">
+            <table class="data-table" >
+                <thead >
+                    <tr>
+                        {{#each excelData.[0]}}
+                        <th>{{@key}}</th>
+                        {{/each}}
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each excelData}}
+                    <tr>
+                        {{#each this}}
+                        <td>{{this}}</td>
+                        {{/each}}
+                    </tr>
+                    {{/each}}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {{/if}}
+
+     {{!-- {{#if excelDataKl}}
+    <div class="card data-section">
+        <h3>📋 Dữ liệu Khách lẻ từ file Excel</h3>
+        <p class="file-info">File: <strong>{{fileName}}</strong> | Số dòng: <strong>{{excelDataKl.length}}</strong></p>
+        
+        <div class="table-wrapper">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        {{#each excelDataKl.[0]}}
+                        <th>{{@key}}</th>
+                        {{/each}}
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each excelDataKl}}
+                    <tr>
+                        {{#each this}}
+                        <td>{{this}}</td>
+                        {{/each}}
+                    </tr>
+                    {{/each}}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {{/if}} --}}
+
+{{#if excelDataTv}}
+    <div class="card data-section">
+        <h3>📋 Dữ liệu Thịnh Vượng từ file Excel</h3>
+        <p class="file-info">File: <strong>{{fileName}}</strong> | Số dòng: <strong>{{excelDataTv.length}}</strong></p>
+        
+        <div class="table-wrapper">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        {{#each excelDataTv.[0]}}
+                        <th>{{@key}}</th>
+                        {{/each}}
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each excelDataTv}}
+                    <tr>
+                        {{#each this}}
+                        <td>{{this}}</td>
+                        {{/each}}
+                    </tr>
+                    {{/each}}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {{/if}}
+
+    {{#if error}}
+    <div class="card error-card">
+        <h3>❌ Lỗi</h3>
+        <p>{{error}}</p>
+    </div>
+    {{/if}}
+    
+    <div class="card">
+        <h3>💡 Hướng dẫn sử dụng</h3>
+        <ul>
+            <li>Chọn file Excel (.xlsx hoặc .xls) từ máy tính của bạn</li>
+            <li>Nhấn nút "Tải lên và xem dữ liệu"</li>
+            <li>Dữ liệu từ sheet đầu tiên sẽ được hiển thị dưới dạng bảng</li>
+            <li>Hỗ trợ tất cả các định dạng Excel phổ biến</li>
+        </ul>
+    </div>
+</div>

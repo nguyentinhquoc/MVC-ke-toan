@@ -1,0 +1,29 @@
+export interface InputExcelData {
+ STT: number;
+ 	NgayThang: string;
+  MaDatCho: string;
+  SoVe: string;
+  TenKhachHang: string;
+  HanhTrinh: string;
+  TinhTrangVe: string;
+  NhaCungCap: string;
+  TienTe: string;
+  NguonNCC: string;
+  GiaNhap: string;
+  PhiKhac: string;
+  ThueKhac: string;
+  ThueGTGT: number;
+  TongGiaNhap: number;
+  MaKhachHang: string;
+  TongThuKhach: number;
+  TienLai: number;
+  TenCongty: string;
+  DiaChiCongTy: string;
+  MSTCongTy: string;
+  TenKhachLe: string;
+  DiaChiKhachLe: string;
+  CCCDKhachle: string;
+  MSTKhachLeCaNhan: string;
+  GhiChu1: string;
+  GhiChu2: string;
+}
