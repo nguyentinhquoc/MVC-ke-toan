@@ -1,17 +1,16 @@
 import {
+  Body,
   Controller,
   Get,
   Post,
   Render,
-  UseInterceptors,
   UploadedFile,
-  Body,
+  UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { AppService } from './app.service';
+import type { InputExcelData } from 'src/modules/ve-may-bay-so/type/type';
 import * as XLSX from 'xlsx';
-import { run } from 'node:test';
-import type { InputExcelData } from 'src/type/type';
+import { AppService } from './app.service';
 
 interface UploadedFileType {
   buffer: Buffer;
@@ -57,7 +56,7 @@ export class AppController {
       });
 
       // Loại bỏ các cột __EMPTY
-      const jsonData = rawData.map((row: any) => {
+      const jsonDataGoc = rawData.map((row: any) => {
         const cleanRow: any = {};
         Object.keys(row).forEach(key => {
           if (!key.startsWith('__EMPTY')) {
@@ -66,17 +65,17 @@ export class AppController {
         });
         return cleanRow;
       });
-
-      const excelDataKlOld = jsonData.filter((data: InputExcelData) => data.MaKhachHang === 'KL');
+const jsonData = jsonDataGoc.filter((data: InputExcelData) => data.NguonNCC !== 'TV');
+      const excelDataKlOld = jsonData.filter((data: InputExcelData) => data.MaKhachHang=='KL');
       const excelDataKl = excelDataKlOld.map((data: InputExcelData, index: number) => {
-        const DonGia = data.ThueGTGT === 0 ? (data.TongThuKhach) : (data.TongThuKhach / 1.08)
+        const DonGia = data.ThueGTGT==0 ? (data.TongThuKhach) : (data.TongThuKhach / 1.08)
         return {
           STT: index + 1,
           NgayHoaDon: data.NgayThang,
           TenKhachHang: data.TenKhachHang,
-          MaSoThue: data.MSTKhachLeCaNhan && data.MSTKhachLeCaNhan.length === 12 ? data.MSTKhachLeCaNhan : '',
+          MaSoThue: data.MSTKhachLeCaNhan && data.MSTKhachLeCaNhan.length==12 ? data.MSTKhachLeCaNhan : '',
           DiaChiKhachHang: data.DiaChiKhachLe ? data.DiaChiKhachLe : 'Người mua không cung cấp thông tin',
-          CCCD: data.CCCDKhachle && data.CCCDKhachle.length === 12 ? data.CCCDKhachle : '',
+          CCCD: data.CCCDKhachle && data.CCCDKhachle.length==12 ? data.CCCDKhachle : '',
           EmailKhachHang: '',
           HinhThucTT: 'Tiền mặt hoặc chuyển khoản',
           SanPham: `${data.SoVe} ${data.HanhTrinh}`,
@@ -85,28 +84,19 @@ export class AppController {
           DonGia: Math.round(DonGia),
           ThanhTien: Math.round(DonGia),
           TienBan: Math.round(DonGia),
-          ThueSuat: Math.round(data.ThueGTGT === 0 ? (DonGia * 0) : (DonGia * 0.08)),
-          TongCong: Math.round(DonGia + (data.ThueGTGT === 0 ? (DonGia * 0) : (DonGia * 0.08))),
+          ThueSuat: Math.round(data.ThueGTGT==0 ? (DonGia * 0) : (DonGia * 0.08)),
+          TongCong: Math.round(DonGia + (data.ThueGTGT==0 ? (DonGia * 0) : (DonGia * 0.08))),
           TinhChatHangHoa: 0,
           DonViTienTe: 'VND'
         };
       });
       // Lọc ra dữ liệu cho khách hàng Thịnh Vượng
-      const excelDataTvOld = jsonData.filter((data: InputExcelData) => data.MaKhachHang === 'PROTE');
-      let stt=0;
+      const excelDataTvOld = jsonData.filter((data: InputExcelData) => data.MaKhachHang=='PROTE');
       const excelDataTv = excelDataTvOld.map((data: InputExcelData, index: number) => {
-        const DonGia = data.ThueGTGT === 0 ? (data.TongGiaNhap + data.TienLai * tyGiaThayDoi) : ((data.TongGiaNhap / 1.08) + (data.TienLai * tyGiaThayDoi))
-        const TienThue = Math.round(data.ThueGTGT === 0 ? (DonGia * 0) : (DonGia * 0.08));
-        if(TienThue > 0){
-          stt = 1;
-          
-        }else if (TienThue == 0){
-          stt = 2;
-        }else if(TienThue < 0){
-          stt = 3;
-        }
+        const DonGia = data.ThueGTGT==0 ? (data.TongGiaNhap + data.TienLai * tyGiaThayDoi) : ((data.TongGiaNhap / 1.08) + (data.TienLai * tyGiaThayDoi))
+        const TienThue = Math.round(data.ThueGTGT == 0 ? (DonGia * 0) : (DonGia * 0.08));
         return {
-          STT: stt,
+          STT: 1,
           NgayHoaDon: data.NgayThang,
           MaKhachHang: null,
           TenKhachHang: 'CÔNG TY CỔ PHẦN TẬP ĐOÀN CÔNG NGHỆ VÀ DU LỊCH THỊNH VƯỢNG',
@@ -120,34 +110,79 @@ export class AppController {
           DonGia: Math.round(DonGia),
           ThanhTien: Math.round(DonGia),
           TienBan: Math.round(DonGia),
-          ThueSuat: Math.round(data.ThueGTGT === 0 ? 0 : 8),
+          ThueSuat: Math.round(data.ThueGTGT == 0 ? 0 : 8),
           TienThue: TienThue,
           TongCong: Math.round(DonGia + TienThue),
           TinhChatHangHoa: 0,
           DonViTienTe: 'VND'
         };
       });
-      // Sắp xếp excelDataTv theo TienThue giảm dần
-      const sortedByTienThueDesc = [...excelDataTv].sort((a, b) => b.TienThue - a.TienThue);
-      
-let lastTaxCode;
+     const sortedByTienThueDesc = [...excelDataTv].sort(
+  (a, b) => b.TienThue - a.TienThue
+);
 
-const updatedData = sortedByTienThueDesc.map((item) => {
-  // Kiểm tra nếu Mã Số Thuế hiện tại giống Mã Số Thuế của dòng trước
-  if (item.MaSoThue === lastTaxCode) {
-    return { ...item, STT: null };
-  } else {
-    // Nếu khác, đây là bắt đầu của một nhóm mới, giữ STT và cập nhật lastTaxCode
-    lastTaxCode = item.MaSoThue;
-    return item;
-  }
-});
+// ================== 4. Chia group ==================
+
+const tvThueLonHon = sortedByTienThueDesc.filter(x => x.TienThue > 0);
+const tvThueBang = sortedByTienThueDesc.filter(x => x.TienThue == 0);
+const tvThueNhoHon = sortedByTienThueDesc.filter(x => x.TienThue < 0);
+
+// ================== 5. Field header cần clear cho dòng sau ==================
+
+const headerFields = [
+  'NgayHoaDon',
+  'MaKhachHang',
+  'TenKhachHang',
+  'TenNguoiMua',
+  'MaSoThue',
+  'DiaChiKhachHang',
+  'HinhThucTT'
+];
+
+// ================== 6. Function format group ==================
+
+function applyGroupFormat(dataList, sttValue) {
+  return dataList.map((item, index) => {
+    if (index == 0) {
+      return {
+        ...item,
+        STT: sttValue
+      };
+    }
+
+    const clearedFields = {};
+    headerFields.forEach(key => {
+      clearedFields[key] = null;
+    });
+
+    return {
+      ...item,
+      STT: null,
+      ...clearedFields
+    };
+  });
+}
+
+// ================== 7. Áp dụng STT cho từng group ==================
+
+const tvThueLonHonWithStt = applyGroupFormat(tvThueLonHon, 1);
+const tvThueBangWithStt = applyGroupFormat(tvThueBang, 2);
+const tvThueNhoHonWithStt = applyGroupFormat(tvThueNhoHon, 3);
+
+// ================== 8. Gộp dữ liệu cuối ==================
+
+const excelDataTvOk = [
+  ...tvThueLonHonWithStt,
+  ...tvThueBangWithStt,
+  ...tvThueNhoHonWithStt
+];
+
       return {
         title: 'Công cụ xem file Excel',
         message: 'Dữ liệu đã được tải lên thành công!',
         excelData: jsonData,
         excelDataKl: excelDataKl,
-        excelDataTv: updatedData,
+        excelDataTv: excelDataTvOk,
         fileName: file.originalname,
       };
     } catch (error) {
