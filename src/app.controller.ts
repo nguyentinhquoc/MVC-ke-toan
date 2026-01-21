@@ -6,8 +6,10 @@ import {
   Render,
   UploadedFile,
   UseInterceptors,
+  UseGuards,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { JwtAuthGuard } from './auth/jwt-auth.guard';
 import type { InputExcelData } from 'src/modules/ve-may-bay-so/type/type';
 import * as XLSX from 'xlsx';
 import { AppService } from './app.service';
@@ -20,6 +22,7 @@ interface UploadedFileType {
 }
 
 @Controller()
+@UseGuards(JwtAuthGuard)
 export class AppController {
   constructor(private readonly appService: AppService) { }
 

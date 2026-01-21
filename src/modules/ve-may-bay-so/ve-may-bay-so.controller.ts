@@ -1,5 +1,6 @@
-import { Body, Controller, Get, Post, Render, UploadedFile, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Get, Post, Render, UploadedFile, UseInterceptors, UseGuards } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { JwtAuthGuard } from '../../auth/jwt-auth.guard';
 import type { InputExcelData } from 'src/modules/ve-may-bay-so/type/type';
 import * as XLSX from 'xlsx';
 import { VeMayBaySoService } from './ve-may-bay-so.service';
@@ -12,6 +13,7 @@ interface UploadedFileType {
 
 
 @Controller('ve-may-bay-so')
+@UseGuards(JwtAuthGuard)
 export class VeMayBaySoController {
   constructor(private readonly veMayBaySoService: VeMayBaySoService) {}
 
