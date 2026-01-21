@@ -5,13 +5,11 @@
   "author": "",
   "private": true,
   "license": "UNLICENSED",
-  "scripts": {
-    "build": "node build-css.js && nest build",
-    "build:css": "pnpm exec tailwindcss -i ./public/css/style.css -o ./public/css/style.min.css",
-    "build:css:watch": "pnpm exec tailwindcss -i ./public/css/style.css -o ./public/css/style.min.css --watch",
+   "scripts": {
+    "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
-    "start:dev": "nest start --watch",
+    "dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
