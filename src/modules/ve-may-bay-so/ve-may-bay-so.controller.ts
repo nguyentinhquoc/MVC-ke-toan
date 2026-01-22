@@ -27,7 +27,7 @@ export class VeMayBaySoController {
       };
     }
   
-    @Post()
+    @Post('upload-excel')
     @Render('index')
     @UseInterceptors(FileInterceptor('file'))
     uploadExcel(@UploadedFile() file: UploadedFileType, @Body('tyGiaThayDoi') tyGiaThayDoi: number) {
@@ -293,7 +293,7 @@ export class VeMayBaySoController {
   const tvThueLonHonWithStt = applyGroupFormat(tvThueLonHon, 1);
   const tvThueBangWithStt = applyGroupFormat(tvThueBang, 2);
   const tvThueNhoHonWithStt = applyGroupFormat(tvThueNhoHon, 3);
-  
+
   // ================== 8. Gộp dữ liệu cuối ==================
   
   const excelDataTvOk = [

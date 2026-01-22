@@ -19,8 +19,10 @@ async function bootstrap() {
   app.setBaseViewsDir(join(__dirname, '..', 'views'));
   app.setViewEngine('hbs');
 
-  // Cấu hình thư mục public cho static files (CSS, JS, images)
-  app.useStaticAssets(join(__dirname, '..', 'public'));
+  app.useStaticAssets(join(__dirname, '..', 'public'), {
+    prefix: '/', // Serve static files từ root
+  });
+  console.log(join(__dirname, '..', 'public'));
 
   await app.listen(process.env.PORT ?? 3000);
 }
