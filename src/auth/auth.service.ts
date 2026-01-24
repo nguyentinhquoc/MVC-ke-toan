@@ -42,7 +42,7 @@ export class AuthService {
     const user = await this.userRepository.findOne({ where: { username } });
 
     if (!user) {
-      throw new UnauthorizedException('Tên đăng nhập hoặc mật khẩu không đúng');
+      throw new UnauthorizedException('Sai tài khoản');
     }
 
     // Check status
@@ -53,7 +53,7 @@ export class AuthService {
     const isPasswordValid = await bcrypt.compare(password, user.password);
 
     if (!isPasswordValid) {
-      throw new UnauthorizedException('Tên đăng nhập hoặc mật khẩu không đúng');
+      throw new UnauthorizedException('Sai tài khoản');
     }
 
     const payload = { 
